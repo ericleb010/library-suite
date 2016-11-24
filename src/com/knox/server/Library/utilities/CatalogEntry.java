@@ -7,8 +7,9 @@ import org.json.simple.JsonObject;
 import org.json.simple.Jsoner;
 import org.json.simple.DeserializationException;
 
+import java.time.ZoneId;
 import java.time.format.DateTimeParseException;
-import java.text.DateFormat;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -20,14 +21,14 @@ public class CatalogEntry {
     private Owner owner;
     private String description = null;
     private String location = null;
-    private Date ownedSince = null;
+    private LocalDate ownedSince = null;
 
     public CatalogEntry(@NotNull String title,
                         @NotNull String author,
                         @NotNull Owner owner,
                         String description,
                         String location,
-                        Date ownedSince) {
+                        LocalDate ownedSince) {
 
         this.title = title;
         this.author = author;
@@ -66,7 +67,7 @@ public class CatalogEntry {
 
         resultObj.put("description", this.description);
         resultObj.put("location", this.location);
-        resultObj.put("ownedSince", this.ownedSince instanceof Date ? this.ownedSince : null);
+        resultObj.put("ownedSince", this.ownedSince instanceof LocalDate ? this.ownedSince : null);
 
         return resultObj.toJson();
     }
@@ -81,7 +82,7 @@ public class CatalogEntry {
         map.put("owner", ownerMap);
         map.put("description", this.description);
         map.put("location", this.location);
-        map.put("ownedSince", this.ownedSince);
+        map.put("ownedSince", Date.from(this.ownedSince.atStartOfDay(ZoneId.systemDefault()).toInstant()));
         return new Document(map);
     }
 
@@ -102,7 +103,7 @@ public class CatalogEntry {
         this.description = (String) entry.get("description");
         this.location = (String) entry.get("location");
         if (entry.get("ownedSince") != null)
-            this.ownedSince = DateFormat.parse((String) entry.get("ownedSince"));
+            this.ownedSince = LocalDate.parse((String) entry.get("ownedSince"));
     }
 
 
@@ -136,10 +137,10 @@ public class CatalogEntry {
     public void setLocation(String location) {
         this.location = location;
     }
-    public Date getOwnedSince() {
+    public LocalDate getOwnedSince() {
         return ownedSince;
     }
-    public void setOwnedSince(Date ownedSince) {
+    public void setOwnedSince(LocalDate ownedSince) {
         this.ownedSince = ownedSince;
     }
 }
