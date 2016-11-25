@@ -67,7 +67,7 @@ public class CatalogEntry {
 
         resultObj.put("description", this.description);
         resultObj.put("location", this.location);
-        resultObj.put("ownedSince", this.ownedSince instanceof LocalDate ? this.ownedSince : null);
+        resultObj.put("ownedSince", this.ownedSince instanceof LocalDate ? this.ownedSince.toString() : null);
 
         return resultObj.toJson();
     }
@@ -102,8 +102,13 @@ public class CatalogEntry {
         // Optional fields
         this.description = (String) entry.get("description");
         this.location = (String) entry.get("location");
-        if (entry.get("ownedSince") != null)
-            this.ownedSince = LocalDate.parse((String) entry.get("ownedSince"));
+        if (entry.get("ownedSince") != null) {
+            Object date = entry.get("ownedSince");
+            if (date instanceof String)
+                this.ownedSince = LocalDate.parse((String) date);
+            else
+                this.ownedSince = ((Date) date).toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        }
     }
 
 

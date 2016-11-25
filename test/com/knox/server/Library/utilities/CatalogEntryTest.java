@@ -23,6 +23,11 @@ public class CatalogEntryTest {
         this.obj = new CatalogEntry("NameOfBook", "NameOfAuthor", new Owner("FirstName", "LastName"), null, null, null);
     }
 
+    @Test public void mongoInitializesProperly() {
+        MongoClient conn = DBUtils.connect();
+        DBUtils.disconnect(conn);
+    }
+
     @Test public void constructorRunsUsingPlainStringsAndNulls() {
         assertNotNull(this.obj);
         assertEquals(this.obj.getTitle(), "NameOfBook");

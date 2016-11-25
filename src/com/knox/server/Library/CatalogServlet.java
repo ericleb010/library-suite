@@ -64,7 +64,9 @@ public class CatalogServlet extends HttpServlet {
         MongoDatabase db = conn.getDatabase("Library");
         db.getCollection("Catalog").find().forEach(new Block<Document>() {
             public void apply(Document entry) {
-                try { result.add(Jsoner.deserialize(entry.toJson())); } catch(DeserializationException e) {};
+                try {
+                    result.add(Jsoner.deserialize((new CatalogEntry(entry)).stringify()));
+                } catch(DeserializationException e) {};
             }
         });
         DBUtils.disconnect(conn);
